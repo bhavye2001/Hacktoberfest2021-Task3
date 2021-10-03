@@ -1,0 +1,123 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+struct node{
+    int data;
+    struct node*next;
+};
+
+getnode()
+{
+    struct node *p;
+    p=(struct node*)malloc(sizeof(struct node));
+    return p;
+}
+
+void insbeg(struct node **list,int x)
+{
+    struct node *p;
+    p=getnode();
+    p->data=x;
+    p->next=*list;
+    *list=p;
+}
+
+insafter(int x,struct node *p)
+{
+    struct node *q;
+    q=getnode();
+    q->data=x;
+    q->next=p->next;
+    p->next=q;
+}
+
+insend(struct node **list,int x)
+{
+    struct node *p;
+    if(*list==NULL)
+    {
+        insbeg(list,x);
+    }
+    else
+    {
+        p=*list;
+        while(p->next!=NULL)
+        {
+            p=p->next;
+        }
+        insafter(x,p);
+    }
+}
+
+middle(struct node**start)
+{
+    struct node*p,*q;
+    p=*start;
+    q=(*start)->next;
+    while(q!=NULL && q->next!=NULL)
+    {
+        p=p->next;
+        q=q->next->next;
+    }
+    return p;
+}
+
+b1search(struct node**start,int x)
+{
+    struct node *q,*p;
+    q=*start;
+    if(q!=NULL)
+    {
+        p=middle(&(*start));
+        if(p->data==x)
+        {
+            return p->data;
+        }
+        else{
+            if(x<=p->data){
+                p->next=NULL;
+                b1search(&(*start),x);
+            }
+            else{
+                *start=p->next;
+                b1search(&(*start),x);
+            }
+        }
+    }
+    else{
+        return NULL;
+    }
+}
+
+int traverse(struct node *list)
+{
+    struct node *p;
+    p=list;
+    while(p!=NULL)
+    {
+        printf("%d\t",p->data);
+        p=p->next;
+    }
+}
+
+int main()
+{
+    struct node*start;
+    start=NULL;
+    insend(&start,100);
+    insend(&start,200);
+    insend(&start,300);
+    insend(&start,400);
+    insend(&start,500);
+    insend(&start,600);
+    insend(&start,700);
+    traverse(start);
+    printf("\n\n");
+    if(b1search(&start,600)==NULL)
+    {
+        printf("Element Not Found");
+    }
+    else{
+        printf("Element Found");
+    }
+}
